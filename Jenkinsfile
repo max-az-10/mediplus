@@ -4,7 +4,7 @@ pipeline {
 
 	stages {
 
-		stage('Checkout Git'){
+		stage('Checkout Git') {
 			steps {
 				git branch: 'main', changelog: false, credentialsId: 'Git-Token', url: 'https://github.com/max-az-10/mediplus.git'	
 			}	
