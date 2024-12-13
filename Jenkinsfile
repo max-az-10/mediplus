@@ -1,7 +1,6 @@
 pipeline {
 
 	agent any
-                                        }
 
 	environment {
        		SONAR_SCANNER_HOME = tool 'SonarQubeScanner'
@@ -15,12 +14,15 @@ pipeline {
 				git branch: 'main', changelog: false, credentialsId: 'Git-Token', url: 'https://github.com/max-az-10/mediplus.git'	
 			}	
 		}
+
 		stage('SonarQube Analysis') {
-			withCredentials([string(credentialsId: 'Sonar-Token', variable: 'SONAR_TOKEN')]) {
-    				withSonarQubeEnv('SonarQube') {
-      					sh "${scannerHome}/bin/sonar-scanner"
-				}
-    			}
-  		}		
+			steps {
+				withCredentials([string(credentialsId: 'Sonar-Token', variable: 'SONAR_TOKEN')]) {
+    					withSonarQubeEnv('SonarQube') {
+      						sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner"
+					}
+    				}
+  			}			
+		}
 	}
 }
