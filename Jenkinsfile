@@ -16,18 +16,10 @@ pipeline {
 			}	
 		}
 		stage('SonarQube Analysis') {
-                        steps {
-				withCredentials([string(credentialsId: 'Sonar-Token', variable: 'SONAR_TOKEN')]) {
-               				withSonarQubeEnv('SonarQube') {
-                                        def scannerHome = tool 'SonarQubeScanner';
-      						sh "${scannerHome}/bin/sonar-scanner"
-					}
-
-				}
-                        }
-                }
-
+   			def scannerHome = tool 'SonarQubeScanner';
+    			withSonarQubeEnv('SonarQube') {
+      				sh "${scannerHome}/bin/sonar-scanner"
+    			}
+  		}		
 	}
 }
-
-		
