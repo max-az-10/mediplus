@@ -3,10 +3,10 @@ pipeline {
 	agent any
                                         }
 
-	//environment {
-        //	SONAR_SCANNER_HOME = tool 'SonarQubeScanner'
+	environment {
+       		SONAR_SCANNER_HOME = tool 'SonarQubeScanner'
 		
-	//}	
+	}	
 
 	stages {
 
@@ -16,9 +16,10 @@ pipeline {
 			}	
 		}
 		stage('SonarQube Analysis') {
-   			def scannerHome = tool 'SonarQubeScanner';
-    			withSonarQubeEnv('SonarQube') {
-      				sh "${scannerHome}/bin/sonar-scanner"
+			withCredentials([string(credentialsId: 'Sonar-Token', variable: 'SONAR_TOKEN')]) {
+    				withSonarQubeEnv('SonarQube') {
+      					sh "${scannerHome}/bin/sonar-scanner"
+				}
     			}
   		}		
 	}
