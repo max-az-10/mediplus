@@ -33,7 +33,7 @@ pipeline {
                 
                 stage('Build image') {
                         steps {
-                                withCredentials([usernamePassword(credentialsId: 'Aws-cred', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+                                withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                                         script {
                                                 sh """
                                                 docker build -t ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} .
@@ -44,9 +44,8 @@ pipeline {
                 }
                 
                 stage('Trivy scan') {
-
                         steps {
-                                withCredentials([usernamePassword(credentialsId: 'Aws-cred', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+                                withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                                         script {
                                                 sh "trivy image --severity HIGH,MEDIUM --format table -o trivy-report.html ${TRIVY_IMAGE}"
                                         }
@@ -56,9 +55,10 @@ pipeline {
 
                 stage('Login to ECR') {
                         steps {
-                                withCredentials([usernamePassword(credentialsId: 'Aws-cred', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+                                withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                                         script {
                                                 sh "aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
+                                                //sh "aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 381492139836.dkr.ecr.us-west-2.amazonaws.com"
                                        }
                                 }
                         }
@@ -66,7 +66,7 @@ pipeline {
                 
                 stage('Push to ECR') {
                         steps {
-                                withCredentials([usernamePassword(credentialsId: 'Aws-cred', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+                                withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                                         script {
                                                 sh "docker push ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}"
                                         }
