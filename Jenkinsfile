@@ -43,7 +43,7 @@ pipeline {
 		stage('Trivy scan') {
                         steps {
                                 script {
-					trivy image --severity HIGH,MEDIUM --format table -o trivy-report.html ${TRIVY_IMAGE}
+					sh "trivy image --severity HIGH,MEDIUM --format table -o trivy-report.html ${TRIVY_IMAGE}"
                                 }
 
                         }
@@ -53,7 +53,7 @@ pipeline {
 		stage('Login to ECR') {
                         steps {
                                 script {
-					aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+					sh "aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
                                 }
 
                         }
@@ -62,7 +62,7 @@ pipeline {
 		stage('Push to ECR') {
                         steps {
                                 script {
-					docker push ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}
+					sh "docker push ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}"
                                 }
 
                         }
