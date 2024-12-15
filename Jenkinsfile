@@ -7,9 +7,9 @@ pipeline {
                 IMAGE_TAG = 'latest'
                 ECR_REPO = 'mediplus-repo'
                 ECR_REGISTRY = '381492139836.dkr.ecr.us-west-2.amazonaws.com'
-                ECS_CLUSTER = 'mediplus-cluster'
-                ECS_SERVICE = 'mediplus-service'
-                ECS_TASK_DEFINITION = 'mediplus-taskdef'
+                //ECS_CLUSTER = 'mediplus-cluster'
+                //ECS_SERVICE = 'mediplus-service'
+                //ECS_TASK_DEFINITION = 'mediplus-taskdef'
                 TRIVY_IMAGE = "${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}"
         }
 
@@ -23,7 +23,7 @@ pipeline {
                 
                 stage('SonarQube Analysis') {
                         steps {
-                                withCredentials([string(credentialsId: 'Sonar-Token', variable: 'SONAR_TOKEN')]) {
+				withCredentials([string(credentialsId: 'Sonar-Token', variable: 'SONAR_TOKEN')]) {
                                         withSonarQubeEnv('SonarQube') {
                                                 sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner"
                                         }
@@ -33,7 +33,7 @@ pipeline {
                 
                 stage('Build image') {
                         steps {
-                                withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+				withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                                         script {
                                                 sh """
                                                 docker build -t ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} .
@@ -53,27 +53,20 @@ pipeline {
                         }
                 }
 
-                stage('Login to ECR') {
+                stage('Login & Push to ECR') {
                         steps {
                                 withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                                         script {
-                                                sh "aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
-                                                //sh "aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 381492139836.dkr.ecr.us-west-2.amazonaws.com"
-                                       }
+                                                sh """
+						aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
+                                       		docker push ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}
+						"""
+					}
                                 }
                         }
                 }
                 
-                stage('Push to ECR') {
-                        steps {
-                                withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
-                                        script {
-                                                sh "docker push ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}"
-                                        }
-                                }
-                        }
-                }
-		stage('Update service in ECS') {
+		/*stage('Update service in ECS') {
                         steps {
                                 withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                                         script {
@@ -82,6 +75,6 @@ pipeline {
                                 }
                         }
                 }
-
+		*/
         }
 }
