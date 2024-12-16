@@ -17,7 +17,8 @@ pipeline {
 
                 stage('Checkout Git') {
                         steps {
-                                git branch: 'main', changelog: false, credentialsId: 'Git-Token', url: 'https://github.com/max-az-10/mediplus.git'
+				git branch: 'main', changelog: false, credentialsId: 'Git-Token', poll: false, url: 'https://github.com/max-az-10/mediplus.git'
+				//git branch: 'main', changelog: false, credentialsId: 'Git-Token', url: 'https://github.com/max-az-10/mediplus.git'
                         }
                 }
                 
@@ -31,7 +32,7 @@ pipeline {
                         }
                 }
                 
-                stage('Build image') {
+                /*stage('Build image') {
                         steps {
 				withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                                         script {
