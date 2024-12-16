@@ -31,19 +31,20 @@ pipeline {
                                 }
                         }
                 }
-                
-                stage('Build image') {
+               	
+		stage('Login & Build image') {
                         steps {
-				withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+                                withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                                         script {
                                                 sh """
+                                                aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
                                                 docker build -t ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} .
-                                                """
-                                                }
+						"""
+                                        }
                                 }
                         }
-                }
-                
+                }	
+		 
                 stage('Trivy scan') {
                         steps {
                                 withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
@@ -54,12 +55,11 @@ pipeline {
                         }
                 }
 
-                stage('Login & Push to ECR') {
+                stage('Push to ECR') {
                         steps {
                                 withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                                         script {
                                                 sh """
-						aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
                                        		docker push ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}
 						"""
 					}
