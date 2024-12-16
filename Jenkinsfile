@@ -37,8 +37,8 @@ pipeline {
                                 withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                                         script {
                                                 sh """
-                                                aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
-                                                docker build -t ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} .
+                                                	aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
+                                                	docker build -t ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} .
 						"""
                                         }
                                 }
@@ -60,7 +60,7 @@ pipeline {
                                 withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                                         script {
                                                 sh """
-                                       		docker push ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}
+                                       			docker push ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}
 						"""
 					}
                                 }
