@@ -37,8 +37,7 @@ pipeline {
                                         script {
                                                 sh """
                                                 	aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ${ECR_REGISTRY}
-                                                	docker build -t mediplus-repo .
-							//docker build -t ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} .
+							docker build -t ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} .
 						"""
                                         }
                                 }
