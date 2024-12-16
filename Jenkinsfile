@@ -32,7 +32,7 @@ pipeline {
                         }
                 }
                 
-                /*stage('Build image') {
+                stage('Build image') {
                         steps {
 				withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                                         script {
