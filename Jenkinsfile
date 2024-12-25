@@ -17,7 +17,7 @@ pipeline {
 
                 stage('Checkout Git') {
                         steps {
-				git branch: 'main', changelog: false, credentialsId: 'Git-Token', poll: false, url: 'https://github.com/max-az-10/mediplus.git'
+				git branch: 'main', changelog: false, credentialsId: 'Git-cred', poll: false, url: 'https://github.com/max-az-10/mediplus.git'
                         }
                 }
                 
