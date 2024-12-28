@@ -8,9 +8,9 @@ pipeline {
                 ECR_REPO = 'mediplus-repo'
                 ECR_REGISTRY = '381492139836.dkr.ecr.us-west-2.amazonaws.com'
 		TRIVY_IMAGE = "${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}"
-                //ECS_CLUSTER = 'mediplus-cluster'
-                //ECS_SERVICE = 'mediplus-service'
-                //ECS_TASK_DEFINITION = 'mediplus-taskdef'
+                ECS_CLUSTER = 'mediplus-cluster'
+                ECS_SERVICE = 'mediplus-service'
+                ECS_TASK_DEFINITION = 'mediplus-taskdef'
         }
 
         stages {
@@ -65,7 +65,7 @@ pipeline {
                         }
                 }
 
-		/*stage('Update service in ECS') {
+		stage('Update service in ECS') {
     			steps {
         			withCredentials([usernamePassword(credentialsId: 'Aws-cred2', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
             				script {
@@ -73,6 +73,6 @@ pipeline {
             				}
         			}
     			}
-        	}*/
+        	}
 	}
 }
