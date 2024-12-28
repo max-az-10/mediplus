@@ -27,8 +27,7 @@ pipeline {
                                         withSonarQubeEnv('SonarQube') {
                                                 sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner"
                                         }
-                                }
-                        }
+				} }
                 }
                	
 		stage('Login & Build image') {
