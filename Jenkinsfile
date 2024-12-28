@@ -7,10 +7,10 @@ pipeline {
                 IMAGE_TAG = 'latest'
                 ECR_REPO = 'mediplus-repo'
                 ECR_REGISTRY = '381492139836.dkr.ecr.us-west-2.amazonaws.com'
+		TRIVY_IMAGE = "${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}"
                 //ECS_CLUSTER = 'mediplus-cluster'
                 //ECS_SERVICE = 'mediplus-service'
                 //ECS_TASK_DEFINITION = 'mediplus-taskdef'
-                TRIVY_IMAGE = "${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}"
         }
 
         stages {
