@@ -6,3 +6,5 @@ COPY . /usr/share/nginx/html
 
 # Expose the port where Nginx will run
 EXPOSE 7000
+
+CMD ["nginx", "-g", "daemon off;"]
